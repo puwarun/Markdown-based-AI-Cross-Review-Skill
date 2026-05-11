@@ -1,5 +1,7 @@
 # Markdown AI Cross-Review Skill
 
+![Markdown AI Cross-Review banner](assets/banner.svg)
+
 A skill for comparing Markdown analysis written by multiple AI systems such as Codex, Claude, Gemini, and ChatGPT, then turning that comparison into a practical recommendation.
 
 It is built for moments where one AI review is not enough and you want a more disciplined synthesis of agreement, disagreement, evidence quality, and risk.
@@ -80,6 +82,7 @@ These make it easy to understand the expected input shape and the style of final
 ```text
 .
 ├── assets/
+│   ├── banner.svg
 │   ├── icon-small.svg
 │   └── icon.svg
 ├── examples/
