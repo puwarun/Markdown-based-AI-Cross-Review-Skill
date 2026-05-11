@@ -112,6 +112,31 @@ Output:
 5. Decision Summary
 ```
 
+### Thai Usage Example
+
+```text
+ใช้ Markdown AI Claim Graph วิเคราะห์ไฟล์ .md ที่แนบมา
+
+Context:
+ไฟล์เหล่านี้เป็นผลวิเคราะห์จาก AI หลายตัวเกี่ยวกับ performance ของ encryption library
+
+Goal:
+แปลงผลวิเคราะห์ทั้งหมดให้เป็น graph โดยแยก claim, evidence, risk, recommendation และ decision
+
+Output:
+1. Node Table
+2. Edge Table
+3. Mermaid Graph
+4. JSON Graph
+5. Decision Summary
+
+เงื่อนไข:
+- ไม่ต้องเขียนรายงานยาวก่อน
+- ให้ graph เป็น output หลัก
+- แสดงให้ชัดว่า AI เห็นตรงกันตรงไหน และขัดแย้งกันตรงไหน
+- สรุปว่าอะไรควรทำตอนนี้ ทำทีหลัง ทำแบบมีเงื่อนไข หรือควรหลีกเลี่ยง
+```
+
 ### Example Output Structure
 
 #### Node Table
