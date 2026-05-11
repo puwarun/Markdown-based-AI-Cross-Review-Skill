@@ -61,7 +61,7 @@ The graph is the primary output.
 ### Basic Prompt
 
 ```text
-Use Markdown AI Claim Graph with the attached Markdown analysis files.
+Use $mag with the attached Markdown analysis files.
 
 Context:
 <Briefly describe what the files are about>
@@ -94,7 +94,7 @@ Input files:
 Prompt:
 
 ```text
-Use Markdown AI Claim Graph to analyze codex_analyst.md and gemini_analyst.md.
+Use $mag to analyze codex_analyst.md and gemini_analyst.md.
 
 Context:
 Both files are performance analyses of an encryption library.
@@ -292,7 +292,7 @@ Each updated file should include:
 
 #### Final Step: Claim Graph Generation
 
-After both analyst files are updated, use Markdown AI Claim Graph to generate:
+After both analyst files are updated, use $mag to generate:
 
 1. Node Table
 2. Edge Table
@@ -375,7 +375,7 @@ Keep the file suitable for Markdown AI Claim Graph.
 #### Final Claim Graph Generation
 
 ```text
-Use Markdown AI Claim Graph to analyze codex_analyst.md and gemini_analyst.md.
+Use $mag to analyze codex_analyst.md and gemini_analyst.md.
 
 Create:
 1. Node Table
