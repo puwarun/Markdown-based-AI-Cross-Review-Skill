@@ -65,10 +65,27 @@ Use $markdown-ai-cross-review to evaluate which review is more convincing, espec
 Use $markdown-ai-cross-review to turn these two AI reviews into a dialogue and end with a shared recommendation.
 ```
 
+## Included Examples
+
+This repo now includes a minimal end-to-end demo:
+
+- `examples/codex_review.md`: sample analyst report
+- `examples/claude_review.md`: second analyst report with a different emphasis
+- `examples/cross_review_result.md`: example synthesis output
+
+These make it easy to understand the expected input shape and the style of final output.
+
 ## Repository Layout
 
 ```text
 .
+├── assets/
+│   ├── icon-small.svg
+│   └── icon.svg
+├── examples/
+│   ├── claude_review.md
+│   ├── codex_review.md
+│   └── cross_review_result.md
 ├── README.md
 ├── SKILL.md
 └── agents/
@@ -93,3 +110,5 @@ It is intentionally skeptical of recommendations that promise performance wins w
 
 - `SKILL.md`: the full operating instructions for the skill
 - `agents/openai.yaml`: UI-facing metadata and default invocation prompt
+- `assets/`: icon assets for skill branding
+- `examples/`: sample analyst inputs and a sample cross-review output

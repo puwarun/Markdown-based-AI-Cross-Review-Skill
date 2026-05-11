@@ -1,6 +1,9 @@
 interface:
   display_name: "Markdown AI Cross-Review"
   short_description: "Compare AI-written Markdown analyses"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#1F6FEB"
   default_prompt: "Use $markdown-ai-cross-review to compare multiple AI analysis Markdown files, highlight agreements and conflicts, and recommend what to do next."
 
 policy:
