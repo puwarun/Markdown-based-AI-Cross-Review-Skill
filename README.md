@@ -6,6 +6,40 @@ A skill for comparing Markdown analysis written by multiple AI systems such as C
 
 It is built for moments where one AI review is not enough and you want a more disciplined synthesis of agreement, disagreement, evidence quality, and risk.
 
+## Installation
+
+Install this skill into your Codex skills directory as `markdown-ai-cross-review`.
+
+### Option 1: Clone into `~/.codex/skills`
+
+```bash
+git clone https://github.com/puwarun/Markdown-based-AI-Cross-Review-Skill.git ~/.codex/skills/markdown-ai-cross-review
+```
+
+### Option 2: Copy this folder into an existing skills directory
+
+Place this repository at:
+
+```text
+~/.codex/skills/markdown-ai-cross-review
+```
+
+The final structure should look like:
+
+```text
+~/.codex/skills/markdown-ai-cross-review/
+├── SKILL.md
+└── agents/openai.yaml
+```
+
+### Verify
+
+After installation, invoke it by name in a prompt such as:
+
+```text
+Use $markdown-ai-cross-review to compare these Markdown analyst reports and give me the safest next steps.
+```
+
 ## Best For
 
 - Code review and architecture review
