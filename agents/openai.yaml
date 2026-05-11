@@ -1,10 +1,10 @@
 interface:
-  display_name: "Markdown AI Cross-Review"
-  short_description: "Compare AI-written Markdown analyses"
+  display_name: "Markdown AI Claim Graph"
+  short_description: "Build claim graphs from AI Markdown"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon.svg"
   brand_color: "#1F6FEB"
-  default_prompt: "Use $markdown-ai-cross-review to compare multiple AI analysis Markdown files, highlight agreements and conflicts, and recommend what to do next."
+  default_prompt: "Use $markdown-ai-claim-graph to convert Markdown analyst reports into a typed claim graph with node and edge tables, Mermaid, JSON, and a decision summary."
 
 policy:
   allow_implicit_invocation: true

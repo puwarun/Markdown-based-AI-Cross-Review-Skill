@@ -1,370 +1,288 @@
 ---
-name: markdown-ai-cross-review
-description: Use this skill when comparing two or more Markdown analysis files from different AI systems such as Codex, Claude, Gemini, or ChatGPT, then synthesizing agreements, disagreements, risks, evidence quality, and a practical recommendation.
+name: markdown-ai-claim-graph
+description: Use this skill when transforming one or more Markdown analyst reports into a graph-native claim map with typed nodes, typed edges, Mermaid output, JSON graph output, and a concise decision summary.
 ---
 
-# Markdown-based AI Cross-Review Skill
+# Markdown AI Claim Graph
 
 ## Purpose
 
-Use this skill to analyze Markdown files produced by multiple AI systems such as Codex, Gemini, Claude, ChatGPT, or other analysis tools, then compare them systematically to find shared conclusions, contradictions, risks, assumptions, and a final verdict the user can act on.
+Use this skill to convert Markdown analysis from AI systems such as Codex, Claude, Gemini, and ChatGPT into a structured claim graph.
+
+This skill is graph-first from the ground up. Do not treat the graph as an optional add-on to a prose report. The graph is the primary artifact. The prose summary comes last and must be derived from the graph.
 
 Useful for:
 
-- Code review / architecture review
-- Performance analysis
-- Security review
+- Code review and architecture review
+- Security analysis
+- Performance investigations
 - Technical decision review
 - Requirement analysis
-- Postmortem / incident analysis
-- Design proposal comparison
-- AI-generated report validation
+- Postmortem and incident analysis
+- Comparing AI-generated reports before acting on them
 
 ## Role
 
-You are an **AI Cross-Review Analyst**.
+You are an **AI Claim Graph Builder**.
 
-Your job is to read multiple Markdown analysis files written by different AI agents, compare their reasoning, identify agreement and disagreement, evaluate risks, and produce a clear final recommendation.
+Your job is to read one or more Markdown analyst files, extract graph entities and relationships, normalize them into typed nodes and edges, and produce a graph-native output that makes agreement, contradiction, evidence chains, risks, recommendations, and decisions explicit.
 
-Do not blindly trust any single AI output. Treat every claim as something to verify, compare, or qualify.
+Do not default to a report-first comparison workflow.
+Do not hide structure inside prose when it should exist as nodes or edges.
+
+## Required Output Order
+
+The default final output must always be:
+
+1. **Node Table**
+2. **Edge Table**
+3. **Mermaid Graph**
+4. **JSON Graph**
+5. **Decision Summary**
+
+Unless the user explicitly asks for a different representation, keep this order.
+
+## Node Types
+
+Use only these node types:
+
+- `Analyst`
+- `File`
+- `Topic`
+- `Claim`
+- `Evidence`
+- `Risk`
+- `Recommendation`
+- `Decision`
+
+## Edge Types
+
+Use only these edge types:
+
+- `supports`
+- `contradicts`
+- `qualifies`
+- `based_on`
+- `recommends`
+- `warns_about`
+- `depends_on`
+- `mitigates`
+- `leads_to`
+- `belongs_to`
 
 ## Inputs
 
 The user may provide:
 
-1. Two or more Markdown files, for example:
-   - `codex_analyst.md`
-   - `gemini_analyst.md`
+1. One or more Markdown analyst files, for example:
+   - `codex_review.md`
    - `claude_review.md`
-   - `chatgpt_summary.md`
-2. Optional supporting files:
+   - `gemini_analysis.md`
+   - `chatgpt_notes.md`
+2. Optional supporting material:
    - Source code
-   - Benchmark results
+   - Benchmarks
    - Logs
    - Requirements
    - Design docs
-   - Architecture diagrams
    - Test results
-3. Optional user objective:
-   - "Help decide what to fix first"
-   - "Help determine which analyst is more convincing"
-   - "Turn this into a conversation"
-   - "Summarize this for executives"
-   - "Convert this into an action plan"
+3. Optional objective, for example:
+   - "Build the claim graph and tell me what is safe to do now"
+   - "Show where the analysts contradict each other"
+   - "Focus on security and correctness risks"
+   - "Turn this into a decision graph"
 
-## Core Workflow
+## Graph-First Workflow
 
-### Step 1: Parse Each Analyst File
+### Step 1: Parse Source Files
 
 For each Markdown file:
 
-- Identify the analyst name or infer it from the filename
-- Extract key claims
-- Extract recommended actions
-- Extract evidence or benchmark references
-- Extract assumptions
-- Extract warnings or caveats
-- Extract priority ordering
-- Extract the final verdict if present
+- Identify the analyst
+- Create a `File` node
+- Create an `Analyst` node if the analyst is known or inferable
+- Extract important topics
+- Extract discrete claims
+- Extract evidence items
+- Extract risks
+- Extract recommendations
+- Extract any explicit or implied decisions
 
-Track the result internally with a structure like:
+Keep claims atomic. If one sentence contains multiple conclusions, split them into separate `Claim` nodes.
 
-```text
-Analyst: <name>
-Main claims:
-- ...
-Recommendations:
-- ...
-Evidence:
-- ...
-Risks / caveats:
-- ...
-Priority:
-- ...
-Verdict:
-- ...
-```
+### Step 2: Normalize Into Nodes
 
-### Step 2: Build a Claim Matrix
+Each node should have:
 
-Create a matrix of important claims across analysts.
+- `id`: stable, readable identifier such as `claim_prepared_decryptor`
+- `type`: one of the allowed node types
+- `label`: human-readable short label
+- `source`: originating file or files when applicable
+- `notes`: optional clarification
 
-Classify each claim as:
+Recommended normalization rules:
 
-- **Agreement**: multiple analysts support the same conclusion
-- **Partial Agreement**: analysts agree on diagnosis but differ on priority or implementation
-- **Disagreement**: analysts contradict each other
-- **Unverified Claim**: only one analyst makes the claim and no evidence is provided
-- **Risky Recommendation**: may improve performance but could hurt correctness, security, maintainability, or operations
+- Use one `Topic` node per meaningful subject area
+- Use one `Claim` node per distinct assertion
+- Use one `Evidence` node per evidence unit, not per paragraph
+- Use one `Risk` node per distinct failure mode
+- Use one `Recommendation` node per actionable proposal
+- Use one `Decision` node per concrete conclusion
 
-Example:
+### Step 3: Connect Nodes With Typed Edges
 
-| Claim | Analyst A | Analyst B | Status | Notes |
+Build the graph explicitly:
+
+- `Analyst -> File` with `belongs_to` only if you are modeling the file under that analyst identity
+- `File -> Claim` with `belongs_to`
+- `File -> Evidence` with `belongs_to`
+- `File -> Recommendation` with `belongs_to`
+- `Claim -> Topic` with `belongs_to`
+- `Evidence -> Claim` with `supports` or `qualifies`
+- `Claim -> Claim` with `supports`, `contradicts`, or `qualifies`
+- `Recommendation -> Claim` with `based_on` when the recommendation follows from the claim
+- `Recommendation -> Risk` with `mitigates` when it reduces a risk
+- `Claim or Recommendation -> Risk` with `warns_about` when it highlights danger
+- `Decision -> Recommendation` with `depends_on` when the decision requires that step
+- `Recommendation -> Decision` with `leads_to` when the action leads toward the final conclusion
+
+Do not invent edge types outside the allowed set.
+
+### Step 4: Reconcile Agreement and Disagreement Through Graph Structure
+
+Do not summarize agreement only in prose.
+
+Instead:
+
+- Create parallel `Claim` nodes when analysts express the same idea differently
+- Link them with `supports` when they reinforce the same conclusion
+- Link them with `contradicts` when they materially disagree
+- Link them with `qualifies` when one narrows, limits, or conditions another
+
+If multiple analysts truly make the same assertion, you may either:
+
+- Keep separate `Claim` nodes per source and connect them with `supports`, or
+- Merge them into one normalized `Claim` node if source attribution remains clear in `source` or `notes`
+
+Prefer separate claim nodes when disagreement nuance matters.
+
+### Step 5: Derive the Decision From the Graph
+
+Only after the graph is built should you write the final `Decision Summary`.
+
+The summary should answer:
+
+- What are the strongest supported claims?
+- Where are the contradictions?
+- Which risks matter most?
+- Which recommendations mitigate those risks?
+- What decision follows from the graph right now?
+
+## Output Schema
+
+### 1. Node Table
+
+Use a Markdown table like:
+
+```md
+| id | type | label | source | notes |
 |---|---|---|---|---|
-| `crypto.privateDecrypt()` is the main bottleneck | Agree | Agree | Agreement | High confidence |
-| Cache runtime defaults by `baseDir` only | Suggests | Warns against | Disagreement | Risk of stale `process.env` |
-| Use prepared decryptor at bootstrap | Agree | Agree | Agreement | Recommended production pattern |
+| analyst_codex | Analyst | Codex | codex_review.md | |
+| claim_decrypt_bottleneck | Claim | Repeated RSA decrypt is the bottleneck | codex_review.md | |
+```
 
-### Step 3: Evaluate Evidence Quality
+### 2. Edge Table
 
-For each major claim, rate evidence quality:
-
-| Rating | Meaning |
-|---|---|
-| High | Supported by benchmark, code reference, logs, or multiple analysts |
-| Medium | Logical and plausible but not directly measured |
-| Low | Speculative, vague, or missing supporting evidence |
-
-Prefer claims backed by:
-
-- Benchmarks
-- Source code references
-- Reproducible tests
-- Logs
-- Security best practices
-- Clear reasoning with trade-offs
-
-Be careful with claims that sound confident but do not show evidence.
-
-### Step 4: Identify Correctness and Safety Risks
-
-Always check whether a recommendation may introduce risk.
-
-Common risk categories:
-
-- **Correctness risk**: stale config, wrong cache key, missed invalidation, race conditions
-- **Security risk**: weaker encryption, secret leakage, unsafe cache, insecure defaults
-- **Operational risk**: key rotation not detected, memory growth, deployment mismatch
-- **Maintainability risk**: duplicated logic, drift between one-shot and prepared APIs
-- **Performance illusion**: micro-optimization that does not affect the real bottleneck
-
-When a recommendation has a risk, do not reject it automatically. Classify it as:
-
-- Safe to do now
-- Safe only with constraints
-- Needs benchmark first
-- Needs design decision
-- Not recommended
-
-### Step 5: Produce the Final Output
-
-Structure the answer as:
-
-1. **Executive Summary**
-2. **What analysts agree on**
-3. **Where they disagree**
-4. **Who is more convincing on each disputed point**
-5. **Risk notes**
-6. **Recommended action plan**
-7. **Final verdict**
-
-## Output Template
+Use a Markdown table like:
 
 ```md
-# AI Cross-Review Result
-
-## Executive Summary
-
-<Briefly summarize agreements, conflicts, and the final takeaway>
-
-## Agreement Matrix
-
-| Topic | Analyst A | Analyst B | Verdict |
+| from | edge | to | rationale |
 |---|---|---|---|
-| <topic> | <view> | <view> | <agreement / partial / disagreement> |
-
-## Key Agreements
-
-1. **<topic>**
-   - Analyst A: <summary>
-   - Analyst B: <summary>
-   - Cross-review verdict: <synthesis>
-
-## Key Disagreements
-
-1. **<disputed topic>**
-   - Analyst A says: <summary>
-   - Analyst B says: <summary>
-   - Assessment: <who is more convincing and why>
-   - Risk: <risk>
-   - Recommendation: <what to do next>
-
-## Risk & Correctness Notes
-
-| Risk | Severity | Explanation | Mitigation |
-|---|---:|---|---|
-| <risk> | High/Medium/Low | <explain> | <fix> |
-
-## Recommended Action Plan
-
-### Do Now
-
-1. <low-risk high-value action>
-2. <low-risk high-value action>
-
-### Do After Benchmark / Requirement
-
-1. <conditional action>
-2. <conditional action>
-
-### Avoid / Be Careful
-
-1. <risky action>
-2. <risky action>
-
-## Final Verdict
-
-<final decision in plain language>
+| evidence_benchmark | supports | claim_decrypt_bottleneck | Benchmark points to RSA decrypt cost |
+| claim_cache_by_basedir | contradicts | claim_cache_is_safe | Cache key misses environment inputs |
 ```
 
-## Conversation Output Mode
+### 3. Mermaid Graph
 
-If the user asks for a conversational result, convert the cross-review into a dialogue between analysts:
+Use Mermaid flowchart syntax:
 
-```md
-## Chat: Analyst A x Analyst B
+````md
+```mermaid
+graph TD
+  analyst_codex[Analyst: Codex]
+  file_codex[File: codex_review.md]
+  claim_a[Claim: Repeated RSA decrypt is the bottleneck]
+  evidence_a[Evidence: Benchmark shows decrypt dominates latency]
 
-**Analyst A:**
-<claim or recommendation>
+  analyst_codex -->|belongs_to| file_codex
+  file_codex -->|belongs_to| claim_a
+  evidence_a -->|supports| claim_a
+```
+````
 
-**Analyst B:**
-<agreement, disagreement, or caveat>
+Keep labels readable. Do not overload the graph with paragraph-sized text.
 
-**Analyst A:**
-<response>
+### 4. JSON Graph
 
-**Analyst B:**
-<final synthesis>
+Use this shape:
+
+```json
+{
+  "nodes": [
+    {
+      "id": "claim_decrypt_bottleneck",
+      "type": "Claim",
+      "label": "Repeated RSA decrypt is the bottleneck",
+      "source": ["codex_review.md"],
+      "notes": ""
+    }
+  ],
+  "edges": [
+    {
+      "from": "evidence_benchmark",
+      "type": "supports",
+      "to": "claim_decrypt_bottleneck",
+      "rationale": "Benchmark points to RSA decrypt cost"
+    }
+  ]
+}
 ```
 
-Rules:
+### 5. Decision Summary
 
-- Keep the dialogue natural but technically accurate
-- Do not invent unsupported claims
-- Make disagreement explicit
-- Show trade-offs clearly
-- End with a shared conclusion
+Keep the final summary short, direct, and graph-derived.
 
-## Visual Summary Mode
+Good example:
 
-If the user asks for an image, infographic, slide, or poster, summarize the cross-review into visual sections:
+> The graph shows strong support for the claim that repeated decrypt work is the main bottleneck, with both analysts converging on bootstrap-time preparation. The main contradiction is around broader caching safety. The safest decision is to implement the prepared decryptor first, add rotation and config tests, and defer broad caching until invalidation rules are explicit.
 
-1. Title
-2. Analyst A speech bubbles
-3. Analyst B speech bubbles
-4. Disagreement highlight
-5. Shared conclusion
-6. Action plan
-7. Final verdict
+## Graph Construction Rules
 
-Recommended visual structure:
-
-```text
-Title: Analyst A x Analyst B
-Subtitle: Cross-Review of <topic>
-
-Left side: Analyst A key points
-Right side: Analyst B key points
-Center: Main disagreement / bottleneck
-Bottom: Shared conclusion + recommended actions
-Footer: Final verdict
-```
-
-## Decision Rules
-
-Prefer actions that are:
-
-- Low risk
-- Easy to test
-- Supported by multiple analysts
-- Supported by benchmark or code evidence
-- Improve maintainability without changing behavior
-
-Be skeptical of actions that:
-
-- Reduce security to gain speed
-- Change default behavior without a migration plan
-- Add cache without an invalidation strategy
-- Claim large performance wins without a benchmark
-- Optimize code outside the actual bottleneck
-
-## Scoring Rubric
-
-When helpful, score each analyst:
-
-| Dimension | Score 1-5 | Meaning |
-|---|---:|---|
-| Accuracy |  | Are the claims technically correct? |
-| Evidence |  | Are claims backed by code, benchmarks, or logs? |
-| Risk awareness |  | Does the analyst consider correctness, security, and ops risk? |
-| Practicality |  | Are recommendations actionable? |
-| Priority judgment |  | Are tasks ordered realistically? |
-
-Example:
-
-```md
-| Analyst | Accuracy | Evidence | Risk Awareness | Practicality | Priority Judgment | Overall |
-|---|---:|---:|---:|---:|---:|---:|
-| Gemini | 4 | 3 | 3 | 4 | 3 | 3.4 |
-| Codex | 4 | 4 | 5 | 4 | 5 | 4.4 |
-```
-
-Do not overuse scoring unless the user explicitly wants comparison or ranking.
-
-## Final Recommendation Style
-
-The final recommendation should be direct and practical.
-
-Good:
-
-> Gemini identified the right optimization areas, but Codex gave the safer priority order. The best next step is to implement the low-risk refactors first, use the prepared API in production, and only add AES-key caching if real traffic shows repeated `secretCode` values.
-
-Bad:
-
-> Both are good and should be considered.
-
-The verdict must help the user decide what to do next.
+- Prefer structure over prose
+- Prefer atomic claims over blended summaries
+- Keep node labels short and readable
+- Preserve source attribution
+- Separate evidence from claims
+- Separate risks from recommendations
+- Create a `Decision` node when the graph supports a concrete next step
+- If evidence is weak, reflect that in `notes` or `rationale`; do not fake certainty
 
 ## Guardrails
 
-- Do not assume one AI is correct just because it sounds more confident
-- Do not merge contradictory claims without explaining the contradiction
-- Do not recommend risky changes without naming the risk
-- Do not hide uncertainty
-- Do not turn every difference into a conflict when it is only a priority difference
-- Do not over-optimize for performance when correctness, security, or maintainability matter more
+- Do not fall back to an agreement matrix as the primary artifact
+- Do not make the prose summary longer than the graph sections
+- Do not invent support where the source only implies uncertainty
+- Do not merge contradictory claims without preserving the contradiction edge
+- Do not treat recommendations as claims when they are actually actions
+- Do not output edge types or node types outside the allowed vocabulary
 
-## Default Final Answer Format in Thai
+## Default Final Answer Style
 
-When the user speaks Thai, answer in Thai by default.
+When the user speaks Thai, answer in Thai by default, but keep graph labels and edge types in English when that makes the structure clearer.
 
-Use this concise structure:
+The final answer should remain GitHub-friendly:
 
-```md
-## สรุปสั้น
-
-...
-
-## จุดที่เห็นตรงกัน
-
-...
-
-## จุดที่เห็นต่าง
-
-...
-
-## ควรทำอะไรก่อน
-
-...
-
-## Verdict
-
-...
-```
-
-Tone:
-
-- Friendly
-- Direct
-- Clear about trade-offs
-- Use English technical terms when they make the explanation clearer
+- Clean Markdown tables
+- Valid Mermaid block
+- Valid JSON block
+- Short decision summary

@@ -1,19 +1,17 @@
-# Markdown AI Cross-Review Skill
+# Markdown AI Claim Graph
 
-![Markdown AI Cross-Review banner](assets/banner.svg)
+A graph-native skill for turning Markdown analyst reports into a structured claim graph.
 
-A skill for comparing Markdown analysis written by multiple AI systems such as Codex, Claude, Gemini, and ChatGPT, then turning that comparison into a practical recommendation.
-
-It is built for moments where one AI review is not enough and you want a more disciplined synthesis of agreement, disagreement, evidence quality, and risk.
+This project replaces the old report-first cross-review workflow with a graph-first workflow. The graph is the primary output. Prose comes last and must be derived from the graph.
 
 ## Installation
 
-Install this skill into your Codex skills directory as `markdown-ai-cross-review`.
+Install this skill into your Codex skills directory as `markdown-ai-claim-graph`.
 
 ### Option 1: Clone into `~/.codex/skills`
 
 ```bash
-git clone https://github.com/puwarun/Markdown-based-AI-Cross-Review-Skill.git ~/.codex/skills/markdown-ai-cross-review
+git clone https://github.com/puwarun/Markdown-based-AI-Cross-Review-Skill.git ~/.codex/skills/markdown-ai-claim-graph
 ```
 
 ### Option 2: Copy this folder into an existing skills directory
@@ -21,95 +19,96 @@ git clone https://github.com/puwarun/Markdown-based-AI-Cross-Review-Skill.git ~/
 Place this repository at:
 
 ```text
-~/.codex/skills/markdown-ai-cross-review
+~/.codex/skills/markdown-ai-claim-graph
 ```
 
 The final structure should look like:
 
 ```text
-~/.codex/skills/markdown-ai-cross-review/
+~/.codex/skills/markdown-ai-claim-graph/
 ├── SKILL.md
 └── agents/openai.yaml
 ```
 
 ### Verify
 
-After installation, invoke it by name in a prompt such as:
+After installation, invoke it by name:
 
 ```text
-Use $markdown-ai-cross-review to compare these Markdown analyst reports and give me the safest next steps.
+Use $markdown-ai-claim-graph to convert these analyst Markdown files into a claim graph and recommend the safest next decision.
 ```
 
-## Best For
+## What It Is
+
+Markdown AI Claim Graph reads one or more Markdown analysis files and converts them into a normalized graph with typed nodes and typed edges.
+
+It is built for tasks such as:
 
 - Code review and architecture review
-- Performance analysis
-- Security review
+- Security analysis
+- Performance investigations
 - Requirement analysis
 - Technical decision review
-- Postmortem and incident analysis
+- Incident and postmortem analysis
 - Comparing AI-generated reports before acting on them
 
-## What This Skill Does
+## Graph-First Output
 
-- Reads multiple Markdown analysis files
-- Extracts claims, recommendations, assumptions, evidence, and caveats
-- Builds an agreement or disagreement view across analysts
-- Highlights unverified claims and risky recommendations
-- Rates evidence quality
-- Produces a clear action plan and final verdict
-- Supports report mode, dialogue mode, and visual summary mode
+The default output order is always:
 
-## Input Pattern
+1. Node Table
+2. Edge Table
+3. Mermaid Graph
+4. JSON Graph
+5. Decision Summary
 
-Typical inputs look like this:
+This is not a prose report with a graph attached. The graph is the core artifact.
 
-- Two or more Markdown files such as `codex_analyst.md`, `claude_review.md`, or `gemini_summary.md`
-- Optional supporting material such as source code, benchmarks, logs, requirements, or design docs
-- An optional objective such as:
-  - "Help decide what to fix first"
-  - "Which analyst is more convincing?"
-  - "Turn this into a dialogue"
-  - "Summarize this for executives"
-  - "Convert this into an action plan"
+## Node Types
 
-## Output Style
+- `Analyst`
+- `File`
+- `Topic`
+- `Claim`
+- `Evidence`
+- `Risk`
+- `Recommendation`
+- `Decision`
 
-The skill is designed to produce structured output that usually includes:
+## Edge Types
 
-1. Executive summary
-2. What analysts agree on
-3. Where they disagree
-4. Which side is more convincing on disputed points
-5. Risk and correctness notes
-6. Recommended action plan
-7. Final verdict
+- `supports`
+- `contradicts`
+- `qualifies`
+- `based_on`
+- `recommends`
+- `warns_about`
+- `depends_on`
+- `mitigates`
+- `leads_to`
+- `belongs_to`
 
-When the user writes in Thai, the final answer should default to Thai.
+## Workflow
 
-## Example Prompts
+1. Parse each Markdown analyst file into discrete topics, claims, evidence items, risks, recommendations, and decisions.
+2. Normalize each extracted item into a typed node.
+3. Connect nodes with typed edges that make support, contradiction, qualification, and decision flow explicit.
+4. Render the graph in Markdown table form, Mermaid form, and JSON form.
+5. Write a short decision summary derived from the graph.
+
+## Example Prompt
 
 ```text
-Use $markdown-ai-cross-review to compare these analyst Markdown files and tell me what we should do first.
-```
-
-```text
-Use $markdown-ai-cross-review to evaluate which review is more convincing, especially on security and correctness risk.
-```
-
-```text
-Use $markdown-ai-cross-review to turn these two AI reviews into a dialogue and end with a shared recommendation.
+Use $markdown-ai-claim-graph to turn these Markdown analyst reports into a claim graph. Show node and edge tables, Mermaid, JSON, and then give me the decision summary.
 ```
 
 ## Included Examples
 
-This repo now includes a minimal end-to-end demo:
+This repo includes a minimal example set:
 
 - `examples/codex_review.md`: sample analyst report
-- `examples/claude_review.md`: second analyst report with a different emphasis
-- `examples/cross_review_result.md`: example synthesis output
-
-These make it easy to understand the expected input shape and the style of final output.
+- `examples/claude_review.md`: second analyst report with different risk emphasis
+- `examples/claim_graph_output.md`: graph-native output example
 
 ## Repository Layout
 
@@ -120,32 +119,25 @@ These make it easy to understand the expected input shape and the style of final
 │   ├── icon-small.svg
 │   └── icon.svg
 ├── examples/
+│   ├── claim_graph_output.md
 │   ├── claude_review.md
-│   ├── codex_review.md
-│   └── cross_review_result.md
+│   └── codex_review.md
 ├── README.md
 ├── SKILL.md
 └── agents/
     └── openai.yaml
 ```
 
-## Core Principle
+## Design Principles
 
-This skill does not assume the loudest or most confident AI is correct.
-
-It prefers recommendations that are:
-
-- Low risk
-- Easy to verify
-- Supported by multiple analysts
-- Backed by code, benchmarks, logs, or reproducible evidence
-- Safe for correctness, security, and maintainability
-
-It is intentionally skeptical of recommendations that promise performance wins while weakening security, changing behavior without a migration plan, or adding caching without an invalidation strategy.
+- Graph-first, not report-first
+- Typed nodes and typed edges only
+- Source attribution must be preserved
+- Agreement and disagreement must appear in graph structure, not just prose
+- Evidence, risks, recommendations, and decisions must be separate entities
 
 ## Main Files
 
-- `SKILL.md`: the full operating instructions for the skill
-- `agents/openai.yaml`: UI-facing metadata and default invocation prompt
-- `assets/`: icon assets for skill branding
-- `examples/`: sample analyst inputs and a sample cross-review output
+- `SKILL.md`: full skill instructions
+- `agents/openai.yaml`: UI metadata and default invocation prompt
+- `examples/`: sample inputs and a graph-native output example
