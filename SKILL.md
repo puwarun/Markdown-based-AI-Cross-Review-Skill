@@ -1,38 +1,48 @@
 ---
 name: markdown-ai-claim-graph
-description: Use this skill when transforming one or more Markdown analyst reports into a graph-native claim map with typed nodes, typed edges, Mermaid output, JSON graph output, and a concise decision summary.
+description: Use this skill to build a typed claim graph from one or more Markdown analyst files, then output node and edge tables, Mermaid, JSON, and a decision summary derived from the graph.
 ---
 
 # Markdown AI Claim Graph
 
-## Purpose
+## Core Idea
 
-Use this skill to convert Markdown analysis from AI systems such as Codex, Claude, Gemini, and ChatGPT into a structured claim graph.
+This skill builds a claim graph.
 
-This skill is graph-first from the ground up. Do not treat the graph as an optional add-on to a prose report. The graph is the primary artifact. The prose summary comes last and must be derived from the graph.
+The graph is the workflow.
+The graph is the primary artifact.
+The graph is the source of truth for the final answer.
 
-Useful for:
+Every useful output must come from explicit graph structure:
 
-- Code review and architecture review
-- Security analysis
-- Performance investigations
-- Technical decision review
-- Requirement analysis
-- Postmortem and incident analysis
-- Comparing AI-generated reports before acting on them
+- nodes
+- edges
+- graph rendering
+- graph serialization
+- graph-derived decision
 
 ## Role
 
 You are an **AI Claim Graph Builder**.
 
-Your job is to read one or more Markdown analyst files, extract graph entities and relationships, normalize them into typed nodes and edges, and produce a graph-native output that makes agreement, contradiction, evidence chains, risks, recommendations, and decisions explicit.
+Your job is to read one or more Markdown analyst files and construct a typed graph that captures:
 
-Do not default to a report-first comparison workflow.
-Do not hide structure inside prose when it should exist as nodes or edges.
+- who said what
+- what file it came from
+- which topics are involved
+- which claims exist
+- what evidence supports or qualifies those claims
+- which risks are present
+- which recommendations follow
+- what decision the graph supports
 
-## Required Output Order
+Do not compress graph structure into prose.
+Do not treat the graph as a visualization layer over a written summary.
+Build the graph first, then render it.
 
-The default final output must always be:
+## Default Output
+
+The default final output must always be in this order:
 
 1. **Node Table**
 2. **Edge Table**
@@ -40,7 +50,7 @@ The default final output must always be:
 4. **JSON Graph**
 5. **Decision Summary**
 
-Unless the user explicitly asks for a different representation, keep this order.
+Keep this order unless the user explicitly asks for another graph representation.
 
 ## Node Types
 
@@ -74,115 +84,133 @@ Use only these edge types:
 
 The user may provide:
 
-1. One or more Markdown analyst files, for example:
+1. One or more Markdown analyst files
    - `codex_review.md`
    - `claude_review.md`
    - `gemini_analysis.md`
    - `chatgpt_notes.md`
-2. Optional supporting material:
-   - Source code
-   - Benchmarks
-   - Logs
-   - Requirements
-   - Design docs
-   - Test results
-3. Optional objective, for example:
-   - "Build the claim graph and tell me what is safe to do now"
-   - "Show where the analysts contradict each other"
-   - "Focus on security and correctness risks"
-   - "Turn this into a decision graph"
+2. Optional supporting material
+   - source code
+   - benchmarks
+   - logs
+   - requirements
+   - design docs
+   - test results
+3. Optional graph focus
+   - "focus on contradictions"
+   - "focus on security risks"
+   - "build the decision path"
+   - "show recommendation dependencies"
 
-## Graph-First Workflow
+## Graph Workflow
 
-### Step 1: Parse Source Files
+### Step 1: Create Source Nodes
 
-For each Markdown file:
+For each input file:
 
-- Identify the analyst
-- Create a `File` node
-- Create an `Analyst` node if the analyst is known or inferable
-- Extract important topics
-- Extract discrete claims
-- Extract evidence items
-- Extract risks
-- Extract recommendations
-- Extract any explicit or implied decisions
+- create a `File` node
+- create an `Analyst` node if the analyst identity is known or inferable
+- connect source ownership with `belongs_to` when needed
 
-Keep claims atomic. If one sentence contains multiple conclusions, split them into separate `Claim` nodes.
+This establishes provenance before any interpretation.
 
-### Step 2: Normalize Into Nodes
+### Step 2: Extract Graph Entities
 
-Each node should have:
+From each file, extract:
 
-- `id`: stable, readable identifier such as `claim_prepared_decryptor`
-- `type`: one of the allowed node types
-- `label`: human-readable short label
-- `source`: originating file or files when applicable
+- `Topic` nodes
+- `Claim` nodes
+- `Evidence` nodes
+- `Risk` nodes
+- `Recommendation` nodes
+- `Decision` nodes when the source states or strongly implies a conclusion
+
+Keep entities atomic.
+Split blended statements into separate nodes when they contain multiple distinct ideas.
+
+### Step 3: Normalize Node Identity
+
+Each node should include:
+
+- `id`: stable, readable identifier such as `claim_decrypt_bottleneck`
+- `type`: one allowed node type
+- `label`: short human-readable text
+- `source`: originating file or files
 - `notes`: optional clarification
 
-Recommended normalization rules:
+Normalization rules:
 
-- Use one `Topic` node per meaningful subject area
-- Use one `Claim` node per distinct assertion
-- Use one `Evidence` node per evidence unit, not per paragraph
-- Use one `Risk` node per distinct failure mode
-- Use one `Recommendation` node per actionable proposal
-- Use one `Decision` node per concrete conclusion
+- one `Claim` node per assertion
+- one `Evidence` node per evidence unit
+- one `Risk` node per failure mode
+- one `Recommendation` node per action
+- one `Decision` node per conclusion
 
-### Step 3: Connect Nodes With Typed Edges
+### Step 4: Connect the Graph
 
-Build the graph explicitly:
+Use edges to express structure directly.
 
-- `Analyst -> File` with `belongs_to` only if you are modeling the file under that analyst identity
+Common patterns:
+
+- `Analyst -> File` with `belongs_to`
 - `File -> Claim` with `belongs_to`
 - `File -> Evidence` with `belongs_to`
 - `File -> Recommendation` with `belongs_to`
 - `Claim -> Topic` with `belongs_to`
 - `Evidence -> Claim` with `supports` or `qualifies`
 - `Claim -> Claim` with `supports`, `contradicts`, or `qualifies`
-- `Recommendation -> Claim` with `based_on` when the recommendation follows from the claim
-- `Recommendation -> Risk` with `mitigates` when it reduces a risk
-- `Claim or Recommendation -> Risk` with `warns_about` when it highlights danger
-- `Decision -> Recommendation` with `depends_on` when the decision requires that step
-- `Recommendation -> Decision` with `leads_to` when the action leads toward the final conclusion
+- `Recommendation -> Claim` with `based_on`
+- `Recommendation -> Risk` with `mitigates`
+- `Claim -> Risk` with `warns_about`
+- `Recommendation -> Decision` with `leads_to`
+- `Decision -> Recommendation` with `depends_on`
 
-Do not invent edge types outside the allowed set.
+Do not invent other node or edge vocabularies.
 
-### Step 4: Reconcile Agreement and Disagreement Through Graph Structure
+### Step 5: Resolve Overlap Through Structure
 
-Do not summarize agreement only in prose.
+When multiple analysts address the same subject:
 
-Instead:
+- use separate `Claim` nodes if attribution matters
+- connect reinforcing claims with `supports`
+- connect incompatible claims with `contradicts`
+- connect narrowing or conditional claims with `qualifies`
 
-- Create parallel `Claim` nodes when analysts express the same idea differently
-- Link them with `supports` when they reinforce the same conclusion
-- Link them with `contradicts` when they materially disagree
-- Link them with `qualifies` when one narrows, limits, or conditions another
+Agreement is a graph pattern.
+Disagreement is a graph pattern.
+Qualification is a graph pattern.
 
-If multiple analysts truly make the same assertion, you may either:
+Do not summarize these relationships only in prose.
 
-- Keep separate `Claim` nodes per source and connect them with `supports`, or
-- Merge them into one normalized `Claim` node if source attribution remains clear in `source` or `notes`
+### Step 6: Render the Graph
 
-Prefer separate claim nodes when disagreement nuance matters.
+Once the graph is complete, render it in four forms:
 
-### Step 5: Derive the Decision From the Graph
+1. Markdown node table
+2. Markdown edge table
+3. Mermaid graph
+4. JSON graph
 
-Only after the graph is built should you write the final `Decision Summary`.
+These are not optional embellishments.
+They are the standard output surfaces of the workflow.
 
-The summary should answer:
+### Step 7: Derive the Decision
 
-- What are the strongest supported claims?
-- Where are the contradictions?
-- Which risks matter most?
-- Which recommendations mitigate those risks?
-- What decision follows from the graph right now?
+Write the `Decision Summary` only after the graph has been rendered.
 
-## Output Schema
+The summary must answer:
+
+- which claims have the strongest support
+- where contradictions exist
+- which risks are most important
+- which recommendations mitigate those risks
+- what decision follows from the graph now
+
+## Output Specification
 
 ### 1. Node Table
 
-Use a Markdown table like:
+Use a Markdown table:
 
 ```md
 | id | type | label | source | notes |
@@ -193,7 +221,7 @@ Use a Markdown table like:
 
 ### 2. Edge Table
 
-Use a Markdown table like:
+Use a Markdown table:
 
 ```md
 | from | edge | to | rationale |
@@ -204,7 +232,7 @@ Use a Markdown table like:
 
 ### 3. Mermaid Graph
 
-Use Mermaid flowchart syntax:
+Render the same structure with Mermaid:
 
 ````md
 ```mermaid
@@ -220,11 +248,9 @@ graph TD
 ```
 ````
 
-Keep labels readable. Do not overload the graph with paragraph-sized text.
-
 ### 4. JSON Graph
 
-Use this shape:
+Serialize the graph as:
 
 ```json
 {
@@ -250,39 +276,39 @@ Use this shape:
 
 ### 5. Decision Summary
 
-Keep the final summary short, direct, and graph-derived.
+Keep this short and graph-derived.
 
 Good example:
 
-> The graph shows strong support for the claim that repeated decrypt work is the main bottleneck, with both analysts converging on bootstrap-time preparation. The main contradiction is around broader caching safety. The safest decision is to implement the prepared decryptor first, add rotation and config tests, and defer broad caching until invalidation rules are explicit.
+> The graph strongly supports the claim that repeated decrypt work is the main bottleneck. The main qualifying structure is around caching safety. The graph supports a decision to implement the prepared decryptor first, add regression tests, and defer broad caching until invalidation rules are explicit.
 
-## Graph Construction Rules
+## Construction Rules
 
-- Prefer structure over prose
-- Prefer atomic claims over blended summaries
-- Keep node labels short and readable
-- Preserve source attribution
+- Prefer explicit nodes over implied concepts
+- Prefer explicit edges over narrative explanation
+- Keep labels short
+- Keep provenance visible
 - Separate evidence from claims
 - Separate risks from recommendations
-- Create a `Decision` node when the graph supports a concrete next step
-- If evidence is weak, reflect that in `notes` or `rationale`; do not fake certainty
+- Create a `Decision` node when the graph supports one
+- Preserve contradiction instead of flattening it
 
 ## Guardrails
 
-- Do not fall back to an agreement matrix as the primary artifact
-- Do not make the prose summary longer than the graph sections
-- Do not invent support where the source only implies uncertainty
-- Do not merge contradictory claims without preserving the contradiction edge
-- Do not treat recommendations as claims when they are actually actions
-- Do not output edge types or node types outside the allowed vocabulary
+- Do not output a prose overview before the graph sections
+- Do not collapse graph structure into an agreement matrix
+- Do not merge contradictory claims into one node without preserving the conflict
+- Do not treat recommendations as evidence
+- Do not treat decisions as recommendations
+- Do not use node or edge types outside the allowed vocabulary
 
 ## Default Final Answer Style
 
-When the user speaks Thai, answer in Thai by default, but keep graph labels and edge types in English when that makes the structure clearer.
+When the user speaks Thai, answer in Thai by default, but keep graph labels and edge types in English when that improves clarity.
 
-The final answer should remain GitHub-friendly:
+The final answer must remain GitHub-friendly:
 
-- Clean Markdown tables
-- Valid Mermaid block
-- Valid JSON block
-- Short decision summary
+- valid Markdown tables
+- valid Mermaid
+- valid JSON
+- short graph-derived decision summary

@@ -2,9 +2,9 @@
 
 ![Markdown AI Claim Graph banner](assets/banner.svg)
 
-A graph-native skill for turning Markdown analyst reports into a structured claim graph.
+A graph-native skill for building typed claim graphs from Markdown analyst files.
 
-This project replaces the old report-first cross-review workflow with a graph-first workflow. The graph is the primary output. Prose comes last and must be derived from the graph.
+Markdown AI Claim Graph does one thing: it constructs a claim graph and renders that graph as tables, Mermaid, JSON, and a graph-derived decision.
 
 ## Installation
 
@@ -34,29 +34,13 @@ The final structure should look like:
 
 ### Verify
 
-After installation, invoke it by name:
-
 ```text
-Use $markdown-ai-claim-graph to convert these analyst Markdown files into a claim graph and recommend the safest next decision.
+Use $markdown-ai-claim-graph to build a claim graph from these Markdown analyst files and output node and edge tables, Mermaid, JSON, and the final decision.
 ```
 
-## What It Is
+## Primary Output
 
-Markdown AI Claim Graph reads one or more Markdown analysis files and converts them into a normalized graph with typed nodes and typed edges.
-
-It is built for tasks such as:
-
-- Code review and architecture review
-- Security analysis
-- Performance investigations
-- Requirement analysis
-- Technical decision review
-- Incident and postmortem analysis
-- Comparing AI-generated reports before acting on them
-
-## Graph-First Output
-
-The default output order is always:
+The standard output order is:
 
 1. Node Table
 2. Edge Table
@@ -64,9 +48,11 @@ The default output order is always:
 4. JSON Graph
 5. Decision Summary
 
-This is not a prose report with a graph attached. The graph is the core artifact.
+This project is organized around those outputs.
 
-## Node Types
+## Graph Model
+
+### Node Types
 
 - `Analyst`
 - `File`
@@ -77,7 +63,7 @@ This is not a prose report with a graph attached. The graph is the core artifact
 - `Recommendation`
 - `Decision`
 
-## Edge Types
+### Edge Types
 
 - `supports`
 - `contradicts`
@@ -92,25 +78,34 @@ This is not a prose report with a graph attached. The graph is the core artifact
 
 ## Workflow
 
-1. Parse each Markdown analyst file into discrete topics, claims, evidence items, risks, recommendations, and decisions.
-2. Normalize each extracted item into a typed node.
-3. Connect nodes with typed edges that make support, contradiction, qualification, and decision flow explicit.
-4. Render the graph in Markdown table form, Mermaid form, and JSON form.
-5. Write a short decision summary derived from the graph.
+1. Create source nodes from input Markdown files.
+2. Extract topics, claims, evidence, risks, recommendations, and decisions as nodes.
+3. Connect those nodes with typed edges.
+4. Render the same graph as tables, Mermaid, and JSON.
+5. Write the decision summary from the rendered graph.
+
+## What The Graph Captures
+
+- analyst provenance
+- file provenance
+- claim structure
+- support and contradiction
+- qualification and dependency
+- risk and mitigation
+- recommendation flow
+- decision logic
 
 ## Example Prompt
 
 ```text
-Use $markdown-ai-claim-graph to turn these Markdown analyst reports into a claim graph. Show node and edge tables, Mermaid, JSON, and then give me the decision summary.
+Use $markdown-ai-claim-graph to build the claim graph for these analyst files. Show the node table first, then the edge table, Mermaid, JSON, and finally the decision summary.
 ```
 
 ## Included Examples
 
-This repo includes a minimal example set:
-
-- `examples/codex_review.md`: sample analyst report
-- `examples/claude_review.md`: second analyst report with different risk emphasis
-- `examples/claim_graph_output.md`: graph-native output example
+- `examples/codex_review.md`
+- `examples/claude_review.md`
+- `examples/claim_graph_output.md`
 
 ## Repository Layout
 
@@ -130,16 +125,8 @@ This repo includes a minimal example set:
     └── openai.yaml
 ```
 
-## Design Principles
-
-- Graph-first, not report-first
-- Typed nodes and typed edges only
-- Source attribution must be preserved
-- Agreement and disagreement must appear in graph structure, not just prose
-- Evidence, risks, recommendations, and decisions must be separate entities
-
 ## Main Files
 
-- `SKILL.md`: full skill instructions
-- `agents/openai.yaml`: UI metadata and default invocation prompt
-- `examples/`: sample inputs and a graph-native output example
+- `SKILL.md`: graph workflow and output contract
+- `agents/openai.yaml`: UI metadata and default prompt
+- `examples/`: source Markdown files plus graph output example
