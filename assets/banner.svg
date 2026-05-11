@@ -4,31 +4,30 @@
   <circle cx="1670" cy="88" r="182" fill="#14356E" fill-opacity="0.45"/>
   <circle cx="42" cy="777" r="170" fill="#16346B" fill-opacity="0.58"/>
 
-  <rect x="102" y="287" width="278" height="278" rx="32" fill="url(#leftCard)"/>
-  <path d="M154 361H327" stroke="#F8FAFC" stroke-width="28" stroke-linecap="round"/>
-  <path d="M154 423H327" stroke="#F8FAFC" stroke-width="28" stroke-linecap="round"/>
-  <path d="M154 485H273" stroke="#F8FAFC" stroke-width="28" stroke-linecap="round"/>
+  <rect x="112" y="304" width="224" height="224" rx="28" fill="url(#leftCard)"/>
+  <path d="M158 369H288" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <path d="M158 426H288" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <path d="M158 483H246" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
 
-  <rect x="1392" y="286" width="278" height="278" rx="32" fill="url(#rightCard)"/>
-  <circle cx="1458" cy="377" r="30" fill="#071224"/>
-  <path d="M1520 379H1618" stroke="#071224" stroke-width="24" stroke-linecap="round"/>
-  <path d="M1438 448H1618" stroke="#071224" stroke-width="24" stroke-linecap="round"/>
-  <path d="M1438 509H1550" stroke="#071224" stroke-width="24" stroke-linecap="round"/>
+  <rect x="1454" y="304" width="224" height="224" rx="28" fill="url(#rightCard)"/>
+  <circle cx="1510" cy="382" r="24" fill="#071224"/>
+  <path d="M1562 384H1642" stroke="#071224" stroke-width="22" stroke-linecap="round"/>
+  <path d="M1488 442H1642" stroke="#071224" stroke-width="22" stroke-linecap="round"/>
+  <path d="M1488 497H1580" stroke="#071224" stroke-width="22" stroke-linecap="round"/>
 
-  <path d="M414 430H763" stroke="#66D7FF" stroke-width="12" stroke-linecap="round" stroke-dasharray="28 18"/>
-  <path d="M1031 430H1378" stroke="#66D7FF" stroke-width="12" stroke-linecap="round" stroke-dasharray="28 18"/>
+  <path d="M408 430H650" stroke="#66D7FF" stroke-width="10" stroke-linecap="round" stroke-dasharray="24 18"/>
+  <path d="M1132 430H1374" stroke="#66D7FF" stroke-width="10" stroke-linecap="round" stroke-dasharray="24 18"/>
 
-  <circle cx="896" cy="429" r="73" fill="#F8FAFC"/>
-  <path d="M862 429H930" stroke="#071224" stroke-width="20" stroke-linecap="round"/>
-  <path d="M896 395V463" stroke="#071224" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="891" cy="429" r="58" fill="#F8FAFC"/>
+  <path d="M864 429H918" stroke="#071224" stroke-width="18" stroke-linecap="round"/>
+  <path d="M891 402V456" stroke="#071224" stroke-width="18" stroke-linecap="round"/>
 
-  <text x="531" y="199" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700">Markdown AI</text>
-  <text x="531" y="326" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700">Cross-Review</text>
+  <text x="575" y="208" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="700">Markdown AI</text>
+  <text x="554" y="318" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="700">Cross-Review</text>
 
-  <text x="400" y="619" fill="#D7DFEE" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="400">Compare analyst reports, surface disagreements,</text>
-  <text x="456" y="681" fill="#D7DFEE" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="400">evaluate risks, and decide with confidence.</text>
+  <text x="494" y="618" fill="#D7DFEE" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="400">Compare reports. Surface disagreements. Decide with confidence.</text>
 
-  <text x="500" y="782" fill="#66D7FF" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700">Codex • Claude • Gemini • ChatGPT</text>
+  <text x="598" y="742" fill="#66D7FF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Codex • Claude • Gemini • ChatGPT</text>
 
   <defs>
     <linearGradient id="leftCard" x1="102" y1="287" x2="380" y2="565" gradientUnits="userSpaceOnUse">
