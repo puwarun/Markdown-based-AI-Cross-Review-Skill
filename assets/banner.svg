@@ -1,26 +1,25 @@
 <svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="1280" height="640" rx="40" fill="#081120"/>
   <rect x="36" y="36" width="1208" height="568" rx="32" fill="url(#bg)"/>
-  <circle cx="1060" cy="126" r="124" fill="#1F6FEB" fill-opacity="0.18"/>
-  <circle cx="170" cy="518" r="154" fill="#38BDF8" fill-opacity="0.12"/>
-  <rect x="100" y="144" width="252" height="312" rx="28" fill="#1F6FEB"/>
-  <rect x="928" y="196" width="252" height="312" rx="28" fill="#38BDF8"/>
-  <path d="M152 222H298" stroke="white" stroke-width="24" stroke-linecap="round"/>
-  <path d="M152 276H298" stroke="white" stroke-width="24" stroke-linecap="round"/>
-  <path d="M152 330H256" stroke="white" stroke-width="24" stroke-linecap="round"/>
-  <path d="M980 274H1126" stroke="#081120" stroke-width="24" stroke-linecap="round"/>
-  <path d="M980 328H1126" stroke="#081120" stroke-width="24" stroke-linecap="round"/>
-  <path d="M980 382H1084" stroke="#081120" stroke-width="24" stroke-linecap="round"/>
-  <circle cx="640" cy="320" r="110" fill="#F8FAFC" stroke="#081120" stroke-width="24"/>
-  <path d="M586 320H694" stroke="#081120" stroke-width="24" stroke-linecap="round"/>
-  <path d="M640 266V374" stroke="#081120" stroke-width="24" stroke-linecap="round"/>
-  <path d="M374 320H520" stroke="#7DD3FC" stroke-width="12" stroke-linecap="round" stroke-dasharray="16 16"/>
-  <path d="M760 320H906" stroke="#7DD3FC" stroke-width="12" stroke-linecap="round" stroke-dasharray="16 16"/>
-  <text x="100" y="98" fill="#E2E8F0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Markdown AI Cross-Review Skill</text>
-  <text x="412" y="245" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Compare AI reviews.</text>
-  <text x="412" y="306" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Surface real disagreements.</text>
-  <text x="412" y="367" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Decide with evidence.</text>
-  <text x="412" y="438" fill="#B8C4D6" font-family="Arial, Helvetica, sans-serif" font-size="28">Structured synthesis for Markdown analyst reports from Codex, Claude, Gemini, ChatGPT, and more.</text>
+  <circle cx="1038" cy="152" r="120" fill="#1F6FEB" fill-opacity="0.16"/>
+  <circle cx="1108" cy="492" r="164" fill="#38BDF8" fill-opacity="0.08"/>
+  <rect x="96" y="120" width="236" height="296" rx="28" fill="#1F6FEB"/>
+  <path d="M144 196H284" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <path d="M144 246H284" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <path d="M144 296H236" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <rect x="904" y="224" width="236" height="296" rx="28" fill="#38BDF8"/>
+  <path d="M952 300H1092" stroke="#081120" stroke-width="22" stroke-linecap="round"/>
+  <path d="M952 350H1092" stroke="#081120" stroke-width="22" stroke-linecap="round"/>
+  <path d="M952 400H1044" stroke="#081120" stroke-width="22" stroke-linecap="round"/>
+  <path d="M340 270H476" stroke="#7DD3FC" stroke-width="10" stroke-linecap="round" stroke-dasharray="14 14"/>
+  <path d="M804 370H896" stroke="#7DD3FC" stroke-width="10" stroke-linecap="round" stroke-dasharray="14 14"/>
+  <circle cx="640" cy="320" r="96" fill="#F8FAFC" stroke="#081120" stroke-width="20"/>
+  <path d="M594 320H686" stroke="#081120" stroke-width="20" stroke-linecap="round"/>
+  <path d="M640 274V366" stroke="#081120" stroke-width="20" stroke-linecap="round"/>
+  <text x="392" y="220" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">Markdown AI</text>
+  <text x="392" y="300" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">Cross-Review</text>
+  <text x="392" y="372" fill="#B8C4D6" font-family="Arial, Helvetica, sans-serif" font-size="30">Compare analyst reports, surface disagreements, and decide with evidence.</text>
+  <text x="392" y="432" fill="#7DD3FC" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Codex  Claude  Gemini  ChatGPT</text>
   <defs>
     <linearGradient id="bg" x1="76" y1="64" x2="1192" y2="576" gradientUnits="userSpaceOnUse">
       <stop stop-color="#0F172A"/>
