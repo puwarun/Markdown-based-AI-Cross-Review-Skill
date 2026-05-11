@@ -463,8 +463,8 @@ claim_graph.md
 
 ## Included Examples
 
-- `examples/codex_review.md`
-- `examples/claude_review.md`
+- `examples/codex_analyst.md`
+- `examples/gemini_analyst.md`
 - `examples/claim_graph_output.md`
 
 ## Repository Layout
@@ -477,8 +477,8 @@ claim_graph.md
 │   └── icon.svg
 ├── examples/
 │   ├── claim_graph_output.md
-│   ├── claude_review.md
-│   └── codex_review.md
+│   ├── codex_analyst.md
+│   └── gemini_analyst.md
 ├── README.md
 ├── README.th.md
 ├── SKILL.md
